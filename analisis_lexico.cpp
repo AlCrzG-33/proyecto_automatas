@@ -17,3 +17,6 @@ bool isLetter(chat c) {
 bool isDigit(char c) {
     return isdigit(c);
 }
+
+vector<Token> AnalizadorLexico(const string& input) {
+}
