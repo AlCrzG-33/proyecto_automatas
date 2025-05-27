@@ -21,9 +21,10 @@ class Automata:
         n = len(texto)
 
         #Estos serviran despues para comprobar si el string ingresado no tiene algun caracter no valido
+        signos = {'+', '-'}
         operadores = {'+', '-', '*', '/', '='}
         parentesis = {'(', ')'}
-
+				
         while i < n:
             x = texto[i]
 
@@ -33,14 +34,16 @@ class Automata:
             # Procesar operadores y paréntesis
             if x in operadores or x in parentesis:
                 if buffer and estado in self.estados_finales:
-                    tokens.append('id' if self._es_id(estado) else 'num')
+                    token = 'id' if self._es_id(estado) else 'num'
+                    tokens.append(token)
+                    token_anterior = token
                     buffer = ""
                     estado = self.estado_inicial
 
-                if x in {'+', '-'} and token_anterior in (None, 'op', 'par_abierto') and i+1 < n and texto[i+1].isdigit():
+                if x in signos and (token_anterior in (None, 'op', 'par_abierto')):
                     buffer += x
                     i += 1
-                    x = texto[i]
+                    continue
                 else:
                     tokens.append(x)
                     token_anterior = 'op' if x in operadores else 'par_abierto' if x == '(' else 'par_cerrado'
@@ -157,6 +160,7 @@ transiciones = [
     #num simbolo
     (0,6,'+'),
     (0,6,'-'),
+    (6,5,'num'),
     #num
     (0,5,'num'),
     (6,5,'num'),
